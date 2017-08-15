@@ -78,12 +78,13 @@ class Speedo(object):
         self.WHITE = (255, 255, 255)
         pygame.init()
 
-        self.screen = pygame.display.set_mode((320, 200))
+        self.scale=2
+        self.screen = pygame.display.set_mode((320 * self.scale, 200 * self.scale))
         self.screen.fill((0, 0, 0))
         pygame.display.update()
 
-        self.font_big = pygame.font.Font(None, 82)
-        self.font_small = pygame.font.Font(None, 45)
+        self.font_big = pygame.font.Font(None, 164)
+        self.font_small = pygame.font.Font(None, 82)
         self.value = ""
         self.v = (160, 160)
 
@@ -94,10 +95,10 @@ class Speedo(object):
         self.rect = self.text_surface.get_rect(center=self.v)
         self.screen.blit(self.text_surface, self.rect)
 
-        self.surface1 = pygame.Surface((320, 200))
+        self.surface1 = pygame.Surface((320 * self.scale, 200 * self.scale))
         self.surface1.set_colorkey((0, 0, 0))
         self.surface1.set_alpha(230)
-        self.screen.blit(self.surface1, (320, 200))
+        self.screen.blit(self.surface1, (320 * self.scale, 200 * self.scale))
 
         pygame.mouse.set_visible(True)
         pygame.display.update()
@@ -140,13 +141,13 @@ class Speedo(object):
         rpm_m = self.rpm.value if self.updated[0] else 0
         self.updated[0] = 0
         self.text_surface = self.font_big.render(str(int(rpm_m)), True, self.WHITE)
-        rect = self.text_surface.get_rect(center=(100, 170))
+        rect = self.text_surface.get_rect(center=(100 * self.scale, 170 * self.scale))
         self.screen.fill((0, 0, 0))
 
         #KMH (sensor 3)
         rpm_w = self.hitrost.value# if self.updated[2] else 0
         self.text_surface1 = self.font_small.render('km/h '+str(int(rpm_w)), True, self.WHITE)
-        rect1 = self.text_surface1.get_rect(center=(255, 30))
+        rect1 = self.text_surface1.get_rect(center=(255 * self.scale, 30 * self.scale))
         self.screen.fill((0, 0, 0))
 
         #RPM_P (sensor 2)
@@ -156,15 +157,15 @@ class Speedo(object):
         self.text_surface2 = self.font_small.render('rpm ' + display_num,
                                                     True,
                                                     self.WHITE)
-        rect2 = self.text_surface2.get_rect(center=(250, 100))
+        rect2 = self.text_surface2.get_rect(center=(250 * self.scale, 100 * self.scale))
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.text_surface, rect)
         self.screen.blit(self.text_surface1, rect1)
         self.screen.blit(self.text_surface2, rect2)
 
-        drawCircleArc(self.screen, (0, 255, 0), (100, 200), 100, 45, 180, 20)
-        drawCircleArc(self.screen, (255, 140, 0), (100, 200), 100, 45, 115, 20)
-        drawCircleArc(self.screen, (255, 0, 0), (100, 200), 100, 45, 70, 20)
+        drawCircleArc(self.screen, (0 , 255, 0), (100 * self.scale, 200 * self.scale), 100 * self.scale, 45, 180, 20)
+        drawCircleArc(self.screen, (255, 140, 0), (100 * self.scale, 200 * self.scale), 100 * self.scale, 45, 115, 20)
+        drawCircleArc(self.screen, (255, 0, 0), (100 * self.scale, 200 * self.scale), 100 * self.scale, 45, 70, 20)
 
         ivan = (rpm_m + 1) / 18.5
         ivan = abs(ivan - 135)
@@ -172,8 +173,8 @@ class Speedo(object):
         # 2500 - 0
         # 45 - 180
         # show rpm's
-        drawCircleArc(self.surface1, [30, 30, 30, 200], (100, 200), 99, 45, ivan, 18)
-        self.screen.blit(self.surface1, (0, 0, 320, 200))
+        drawCircleArc(self.surface1, [30, 30, 30, 200], (100  * self.scale, 200  * self.scale), 99 * self.scale, 45, ivan, 18)
+        self.screen.blit(self.surface1, (0, 0, 320  * self.scale, 200  * self.scale))
 
         pygame.display.update()
         return True
