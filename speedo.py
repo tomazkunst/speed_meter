@@ -17,6 +17,7 @@ import random
 import sys
 import serial
 import re
+from collections import deque
 
 import multiprocessing as mp
 
@@ -52,7 +53,8 @@ class ReadSerial(object):
         self.read()
 
     def read(self):
-        buffer_data = []
+        buffer_data_e = deque(20*[0], 20)
+        buffer_data_p = deque(5*[0], 5)
         prev = 0
         while True:
             line = self.ser.readline()
@@ -61,10 +63,12 @@ class ReadSerial(object):
             sensor, time = line.split(":")
             print "time: " + time
             if sensor == "1":
-                self.e_rpm.value = int(60/float(time)*1000)
+                buffer_data_e.append(int(60/float(time)*1000))
+                self.e_rpm.value = sum(buffer_data_e)/20
                 self.updated[0] += 1
             elif sensor == "2":
-                self.p_rpm.value = int(60/float(time)*1000)
+                buffer_data_p.append(int(60/float(time)*1000))
+                self.p_rpm.value = sum(buffer_data_p)/5
                 self.updated[1] += 1
             elif sensor == "3":
                 self.w_rpm.value = int(1000/float(time) * 2 * math.pi * WHEEL_R)
@@ -184,5 +188,5 @@ class Speedo(object):
 if __name__ == '__main__':
     speedo = Speedo()
     while True:
-        sleep(1)
+        sleep(0.5)
         speedo.update()
